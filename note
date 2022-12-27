@@ -1,0 +1,103 @@
+your_email = "libarycollege@gmail.com"
+your_password = "zwbgbvdedsyaoauq"
+
+import xlsxwriter
+
+a=str(input("enter:"))
+b=str(input("enter:"))
+workbook = xlsxwriter.Workbook('Example2.xlsx')
+worksheet = workbook.add_worksheet()
+worksheet.set_column('A:A', 20)
+bold = workbook.add_format({'bold': True})
+worksheet.write('A1', a)
+worksheet.write('A2', b, bold)
+# worksheet.write(2, 0, 123)
+# worksheet.write(3, 0, 123.456)
+workbook.close()
+# print(len(a))
+##################html code#######################
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.button {
+  background-color: #4CAF50; /* Green */
+  border-radius: 4px;
+  color: white;
+  padding: 9px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+
+}
+.button1 {
+  background-color: white;
+  color: black;
+<!--  border: 2px solid #4CAF50;-->
+}
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+.button:hover span {
+  padding-right: 25px;
+}
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}body {
+  background-color: lightblue;
+}
+
+</style>
+</head>
+<body>
+<form action="/form">
+    <div style="text-align:left">
+        <button type="submit" class="button button1" >Mail</button>
+    </div>
+</form>
+<form method="POST">
+    <div style="text-align:center">
+    <label for="Name">Name:</label>
+    <input name="text"id="Name"placeholder="Name of the student"required>
+    </div >
+    <div style="text-align:center">
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" placeholder="Email of the student"required>
+    </div>
+    <div style="text-align:center">
+    <label for="date">Enter Purchase Date:</label>
+    <input type="date" name="date" id="date" min="2019-06-10"required>
+    </div>
+    <div style="text-align:center">
+    <label for="date">Enter Return Date:</label>
+    <input type="date" name="date1" id="EndDate" min="2019-06-10"required>
+    </div>
+    <div style="text-align:center">
+    <label for="Status">Status:</label>
+    <input type="text" name="Status" id="Status"  placeholder="Status paid/not paid "required>
+    </div>
+    <div style="text-align:center">
+        <button class="button" style="vertical-align:middle"><span>submit </span></button>
+    </div>
+</form>
+
