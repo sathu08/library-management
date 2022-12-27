@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="eng">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Book Library</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <style>
+        #navlist {
+            background-color: #0074D9;
+            position: absolute;
+            width: 100%;
+        }
+        #navlist a {
+            float:left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        #navlist a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
   <section class="hero is-info is-fullheight">
-    <form action="/Sent_mail">
-              <div style="text-align:left">
-                <button type="submit" class="button is-success">Mail</button>
-              </div>
-    </form >
-    <form action="/book_details">
-              <div style="text-align:left">
-                <button type="submit" class="button is-success">Book Details</button>
-              </div>
-            </form >
-    <form action="/book_return">
-              <div style="text-align:left">
-                <button type="submit" class="button is-success">Return Book</button>
-              </div>
-            </form >
+    <div id="navlist">
+        <a href="/Sent_mail">Mail</a>
+        <a href="/book_details">Book Details</a>
+        <a href="book_return">Return Book</a>
+    </div>
     <div class="hero-body">
       <div class="container">
         <div class="columns is-centered">
