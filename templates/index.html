@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Library</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <style>
+        #navlist {
+            background-color: #0074D9;
+            position: absolute;
+            width: 100%;
+        }
+        #navlist a {
+            float:left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        #navlist a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+  <section class="hero is-info is-fullheight">
+    <div id="navlist">
+        <a href="/Sent_mail">Mail</a>
+        <a href="/book_details">Book Details</a>
+        <a href="/book_return">Return Book</a>
+      <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+
+    </div>
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-half">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <form action="" method="POST">
+              <div class="field">
+                <label for="Name">Name of the student</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input class="input" id="Name" type="text" name="name" placeholder="Student Name">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="College_ID">College ID</label>
+                <p class="control has-icons-left">
+                  <input class="input"type="text" name="College_ID" id="College_ID"  placeholder="College ID">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <label for="email">Student Mail ID</label>
+                <p class="control has-icons-left">
+                  <input class="input"type="email" name="email" id="email"  placeholder="Student Mail Id">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <label for="book">Book Name</label>
+                <p class="control has-icons-left">
+                  <input class="input"type="text" name="book" id="book"  placeholder="Book Name">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-success">
+                    submit
+                  </button>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+
+</html>
