@@ -143,8 +143,8 @@ def forget_email():
                         '"If you did not request a password reset, then simply ignore this email and no changes will be made."'
                         '"Have a great day!"')
                 print('Sending email to %s...' % email)
-                # smtpObj.sendmail('sender email', email, body)
-                # smtpObj.quit()
+                smtpObj.sendmail('sender email', email, body)
+                smtpObj.quit()
                 msg= "Successfully Sent"
                 forget_email.var = email
                 return render_template('forgot_email.html',msg=msg)
