@@ -1,15 +1,11 @@
 from flask import Flask, render_template, session, request, flash, redirect,url_for
-from flask_mysqldb import MySQL
+import secrets
 import smtplib
-from datetime import timedelta,date
+from datetime import timedelta, date
+import sqlite3
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-app.config["MYSQL_HOST"] = 'localhost'
-app.config["MYSQL_USER"] = 'root'
-app.config["MYSQL_PASSWORD"] = '@@Sathyamass08'
-app.config["MYSQL_DB"] = 'Flask_app'
-mysql = MySQL(app)
+app.secret_key = secrets.token_hex(16)
 smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
 smtpObj.ehlo()
 smtpObj.starttls()
@@ -23,15 +19,16 @@ def login():
     if request.method == 'POST' and 'email_id' in request.form and 'password' in request.form:
         email = request.form['email_id']
         password = request.form['password']
-        cur = mysql.connection.cursor()
-        cur.execute('select * from account WHERE email_id = % s AND password = % s', (email, password))
+        conn = sqlite3.connect('flask_app.db')
+        cur = conn.cursor()
+        cur.execute('select * from account WHERE email_id = ? AND password = ?', (email, password))
         account = cur.fetchone()
         cur.connection.commit()
         cur.close()
         if account:
             session['loggedin'] = True
-            session['email_id'] = account[1]
-            session['password'] = account[2]
+            session['email_id'] = account[0]
+            session['password'] = account[1]
             msg = 'Logged in successfully !'
             return redirect(url_for('index'))
         else:
@@ -58,10 +55,11 @@ def index():
         date_book_purchased = date.today()
         date_book_return = date.today() + timedelta(days=7)
         status_book = "'not submit'"
-        cur = mysql.connection.cursor()
+        conn = sqlite3.connect('flask_app.db')
+        cur = conn.cursor()
         Values = name, email, College_ID, book, date_book_purchased, date_book_return, status_book
         cur.execute(
-            "INSERT INTO user(name, email ,College_ID ,book, date_book_purchased, date_book_return, status_book)VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO user(name, email ,College_ID ,book, date_book_purchased, date_book_return, status_book)VALUES (?, ?, ?, ?, ?, ?, ?)",
             (Values))
         cur.connection.commit()
         cur.close()
@@ -78,12 +76,13 @@ def index():
 
 @app.route('/Sent_mail')
 def users():
-    cur = mysql.connection.cursor()
-    user = cur.execute(
+    conn = sqlite3.connect('flask_app.db')
+    cur = conn.cursor()
+    cur.execute(
         "SELECT email,name,book,date_book_purchased FROM user WHERE date_book_purchased >= CURRENT_DATE AND status_book = 'not submit'")
+    userDetails = cur.fetchall()
+    if len(userDetails) >= 0:
 
-    if user >= 0:
-        userDetails = cur.fetchall()
         for email, name, book, date_book_purchased in userDetails:
             body = ('Subject: Book Rent From Library Need to Return.\n\nDear %s,\nYou have rent a '
                     'Book from Library on  %s,Name of  the Book is %s,'
@@ -103,13 +102,14 @@ def book_return():
         Name = User_Details['name']
         Email = User_Details['email']
         paid = "submit"
-        cur = mysql.connection.cursor()
-        cur.execute("update user set status_book = %s where name= %s", (paid, Name))
+        conn = sqlite3.connect('flask_app.db')
+        cur = conn.cursor()
+        cur.execute("update user set status_book = ? where name= ?", (paid, Name))
         cur.connection.commit()
         cur.close()
         body = ('Subject: Book Rent From Library.\n\nDear %s,\nYou have rent a '
-                'Book from %s,Name of  the Book is %s,'
-                'Please make sure to return the book on time. \nThank you!' % Name)
+                'Book from ,Name of  the Book is ,'
+                'Please make sure to return the book on time. \nThank you!') % Name
         print('Sending email to %s...' % Email)
         smtpObj.sendmail('sender email', Email, body)
         smtpObj.quit()
@@ -120,20 +120,24 @@ def book_return():
 
 @app.route('/book_details')
 def book_details():
-    cur = mysql.connection.cursor()
-    user = cur.execute(
+    conn = sqlite3.connect('flask_app.db')
+    cur = conn.cursor()
+    cur.execute(
         "SELECT * FROM user")
+    userDetails = cur.fetchall()
+    if len(userDetails) > 0:
 
-    if user > 0:
-        userDetails = cur.fetchall()
+        for i in userDetails:
+            print(i)
         return render_template('book_details.html', userDetails=userDetails)
 @app.route('/forget_email', methods=['GET','POST'])
 def forget_email():
-    msg=''
+    msg = ''
     if request.method == 'POST':
         user = request.form
         email = user['forgot_email']
-        cur = mysql.connection.cursor()
+        conn = sqlite3.connect('flask_app.db')
+        cur = conn.cursor()
         cur.execute('select email_id from account')
         cur.fetchall()
         for i in cur:
@@ -155,22 +159,22 @@ def forget_email():
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
-    msg=''
+    msg = ''
     email = forget_email.var
     if request.method == 'POST':
         password = request.form['password']
         verify_password = request.form['password_verify']
         if password == verify_password:
-            cur = mysql.connection.cursor()
-            cur.execute('update account set password = %s where email_id=%s', (password, email))
+            conn = sqlite3.connect('flask_app.db')
+            cur = conn.cursor()
+            cur.execute('update account set password = ? where email_id= ?', (password, email))
             cur.connection.commit()
             cur.close()
             return redirect(url_for('login'))
 
         else:
             msg = "Password don't match"
-    return render_template('reset_password.html',msg=msg)
-
+    return render_template('reset_password.html', msg=msg)
 
 
 if __name__ == "__main__":
